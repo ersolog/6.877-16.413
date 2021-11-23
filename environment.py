@@ -3,6 +3,7 @@ import math
 
 import shapely.geometry as geom
 from shapely import affinity
+from shapely.strtree import STRtree
 import itertools
 from matplotlib import pyplot as plt
 from descartes import PolygonPatch
@@ -50,6 +51,7 @@ class Environment:
         self.obstacles = []
         self.obstacles_map = {}
         self.bounds = bounds
+        self.strtree = None
         if not yaml_file is None:
             if self.load_from_yaml_file(yaml_file):
                 if bounds is None:
@@ -59,10 +61,14 @@ class Environment:
     #@property
     #def bounds(self):
     #    return self.bounds
-
+    
+    def add_strtree(self):
+        self.strtree = STRtree(self.obstacles)
+        
     def add_obstacles(self, obstacles):
         self.obstacles = self.obstacles + obstacles
         self.calculate_scene_dimensions()
+        self.add_strtree()
 
     def calculate_scene_dimensions(self):
         """Compute scene bounds from obstacles."""

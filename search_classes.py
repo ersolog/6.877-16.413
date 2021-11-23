@@ -1,10 +1,9 @@
 class SearchNode(object):
-    def __init__(self, state, parent_node=None, cost=0.0, action=None, subpath=None):
+    def __init__(self, state, parent_node=None, cost=0.0, action=None):
         self._parent = parent_node
         self._state = state
         self._action = action
         self._cost = cost
-        self._subpath = subpath
 
     def __repr__(self):
         return "<SearchNode (id: %s)| state: %s, cost: %s, parent_id: %s>" % (id(self), self.state,
@@ -24,10 +23,6 @@ class SearchNode(object):
     def cost(self):
         """Get the cost to this search state"""
         return self._cost
-    @property
-    def subpath(self):
-        """return subpath to get to this state"""
-        return self._subpath
 
     @property
     def action(self):
@@ -50,7 +45,10 @@ class Path(object):
         self.path = []
         node = search_node
         while node is not None:
-            self.path.append(node.state)
+            if node.action is not None:
+                self.path.extend(reversed(node.action))
+            # self.path.append(node.state)
+
             node = node.parent
         self.path.reverse()
         self.cost = search_node.cost
@@ -76,3 +74,4 @@ class Path(object):
                 e.set_color('red')
         dot_graph.set_concentrate(False)
         display_svg(dot_graph.create_svg(), raw=True)
+        
