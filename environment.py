@@ -112,6 +112,8 @@ class Environment:
             self.obstacles.append(parsed)
             self.obstacles_map[name] = parsed
         self.expanded_obstacles = [obs.buffer(0.75/2, resolution=2) for obs in self.obstacles]
+        self.add_strtree()
+
 
     
     def parse_rectangle(self, name, description):
